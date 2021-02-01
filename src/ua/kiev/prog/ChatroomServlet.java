@@ -19,7 +19,11 @@ public class ChatroomServlet extends HttpServlet {
 
         Chatroom room = Chatroom.fromJSON(bufStr);
         if (room != null)
-            chatroom.getChatroom().put(room.getChatroom(), room);
+            if (chatroom.getChatroom().containsKey(room.getChatroom()) || chatroom.getUsersList().containsKey(room.getChatroom())) {
+                response.setStatus(HttpServletResponse.SC_CONFLICT);    //409
+            } else {
+                chatroom.getChatroom().put(room.getChatroom(), room);
+            }
         else
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     }
